@@ -50,7 +50,7 @@ export class PedidosGateway {
     try {
 
       const drogueriaId = client.handshake.headers.id_drogueria;
-      console.log(drogueriaId);
+      console.log(drogueriaId, `puerto ${process.env.PORT || 3000}`);
       
       const socketCliente: ClientPool = {
         id_drogueria: Array.isArray(drogueriaId) ? drogueriaId[0] : drogueriaId,
