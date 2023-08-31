@@ -14,7 +14,7 @@ import { PedidoDTO } from './dto/create-pedido.dto';
   cors: {
     origin: '*',
   },
-  transports: ['polling'],
+  transports: ['websocket'],
   namespace: '',
 })
 export class PedidosGateway {
