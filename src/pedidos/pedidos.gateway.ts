@@ -12,13 +12,13 @@ import { PedidoDTO } from './dto/create-pedido.dto';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: 'http://localhost:5173',
+    credentials: true,
   },
-  transports: ['websocket'],
-  namespace: '',
+  transports: ['polling'],
+  namespace: 'api/websocket',
 })
 export class PedidosGateway {
-
   @WebSocketServer() wss: Server;
   private $clientPool = new BehaviorSubject<ClientPool[]>([]);
   private readonly logger = new Logger(PedidosGateway.name);
@@ -26,7 +26,7 @@ export class PedidosGateway {
   constructor() {
     this.$clientPool.subscribe((x) => {
       x.forEach((y) => {
-      /*   this.logger.debug(y.id_drogueria); */
+        /*   this.logger.debug(y.id_drogueria); */
       });
     });
   }
@@ -47,11 +47,10 @@ export class PedidosGateway {
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    try {
+    this.wss.emit("CONECTADO",'Mensaje enviado desde el backend');
 
+    try {
       const drogueriaId = client.handshake.headers.id_drogueria;
-      console.log(drogueriaId, `puerto ${process.env.PORT || 3000}`);
-      
       const socketCliente: ClientPool = {
         id_drogueria: Array.isArray(drogueriaId) ? drogueriaId[0] : drogueriaId,
         socketId: client.id,
@@ -102,12 +101,10 @@ export class PedidosGateway {
 
   test() {
     try {
-      this.wss.emit('TEST','Hola');
+      this.wss.emit('TEST', 'Hola');
       return {
-        hola: 'mundo'
-      }  
-    } catch (error) {
-    
-    }
+        hola: 'mundo',
+      };
+    } catch (error) {}
   }
 }
